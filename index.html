@@ -1,56 +1,42 @@
 <!DOCTYPE html>
-<html lang="zh-CN" data-theme="dark">
+<html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>待办事项 · NEXUS TODO</title>
+<title>1的待办事项</title>
 <style>
   :root {
-    /* 亮色科技主题 */
-    --bg: #e8eefb;
-    --bg-deep: #dbe4f7;
-    --card: rgba(255, 255, 255, 0.62);
-    --card-solid: #ffffff;
-    --text: #0b1224;
-    --text-soft: #556080;
-    --border: rgba(0, 180, 220, 0.22);
-    --cyan: #00a8c6;
-    --cyan-bright: #00d4f5;
-    --magenta: #8b5cf6;
-    --pink: #ec4899;
-    --glow-cyan: rgba(0, 180, 220, 0.35);
-    --glow-magenta: rgba(139, 92, 246, 0.30);
-    --input-bg: rgba(255, 255, 255, 0.7);
-    --tag-bg: rgba(0, 168, 198, 0.08);
-    --shadow: 0 8px 32px rgba(20, 40, 90, 0.12);
-    --particle-a: "0, 168, 198";
-    --particle-b: "139, 92, 246";
+    --bg: #f2f4fb;
+    --card: #ffffff;
+    --text: #1f2430;
+    --text-soft: #6b7280;
+    --border: #e6e8f0;
+    --primary: #5b6cff;
+    --primary-dark: #4453e0;
+    --primary-soft: #eceefe;
+    --danger: #ef4444;
+    --danger-soft: #fef0f0;
+    --success: #16a34a;
+    --warning: #f59e0b;
+    --shadow: 0 10px 30px rgba(40, 48, 99, 0.10);
+    --radius: 16px;
   }
   [data-theme="dark"] {
-    /* 深空霓虹主题 */
-    --bg: #05070f;
-    --bg-deep: #02040a;
-    --card: rgba(16, 22, 42, 0.55);
-    --card-solid: #0e1528;
-    --text: #e7f6ff;
-    --text-soft: #7d8bb5;
-    --border: rgba(0, 243, 255, 0.18);
-    --cyan: #00f3ff;
-    --cyan-bright: #66f9ff;
-    --magenta: #a855f7;
-    --pink: #ff3df0;
-    --glow-cyan: rgba(0, 243, 255, 0.45);
-    --glow-magenta: rgba(168, 85, 247, 0.40);
-    --input-bg: rgba(10, 16, 34, 0.6);
-    --tag-bg: rgba(0, 243, 255, 0.06);
-    --shadow: 0 8px 32px rgba(0, 0, 0, 0.55);
-    --particle-a: "0, 243, 255";
-    --particle-b: "168, 85, 247";
+    --bg: #14161f;
+    --card: #1e212d;
+    --text: #e8eaf2;
+    --text-soft: #9aa1b5;
+    --border: #2c3040;
+    --primary: #7b8cff;
+    --primary-dark: #5b6cff;
+    --primary-soft: #262b45;
+    --danger: #f87171;
+    --danger-soft: #3a2326;
+    --shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
-  html { scrollbar-color: var(--cyan) transparent; }
   body {
     font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
     background: var(--bg);
@@ -58,201 +44,186 @@
     min-height: 100vh;
     display: flex;
     justify-content: center;
-    padding: 44px 16px 60px;
-    overflow-x: hidden;
-    transition: background .4s, color .4s;
+    padding: 40px 16px;
+    transition: background .3s, color .3s;
   }
 
-  /* ===== 动态背景层 ===== */
-  #bgCanvas {
-    position: fixed;
-    inset: 0;
-    z-index: 0;
-    pointer-events: none;
-  }
-  body::before {
-    /* 网格地板 */
-    content: "";
-    position: fixed;
-    inset: 0;
-    z-index: 0;
-    pointer-events: none;
-    background-image:
-      linear-gradient(rgba(0, 200, 255, 0.05) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(0, 200, 255, 0.05) 1px, transparent 1px);
-    background-size: 44px 44px;
-    mask-image: radial-gradient(ellipse 90% 70% at 50% 0%, #000 30%, transparent 80%);
-    -webkit-mask-image: radial-gradient(ellipse 90% 70% at 50% 0%, #000 30%, transparent 80%);
-  }
-  body::after {
-    /* 极光光晕 */
-    content: "";
-    position: fixed;
-    inset: 0;
-    z-index: 0;
-    pointer-events: none;
-    background:
-      radial-gradient(600px 340px at 12% -6%, var(--glow-cyan), transparent 70%),
-      radial-gradient(640px 380px at 92% 4%, var(--glow-magenta), transparent 70%),
-      radial-gradient(500px 420px at 50% 108%, var(--glow-cyan), transparent 72%);
-    opacity: .55;
-    animation: aurora 12s ease-in-out infinite alternate;
-  }
-  @keyframes aurora {
-    0%   { transform: translate3d(0, 0, 0) scale(1); }
-    100% { transform: translate3d(0, 18px, 0) scale(1.06); }
+  .app {
+    width: 100%;
+    max-width: 620px;
   }
 
-  .app { position: relative; z-index: 1; width: 100%; max-width: 640px; }
-
-  /* ===== 通用玻璃卡 ===== */
-  .glass {
+  /* ---------- 登录视图 ---------- */
+  .auth-card {
     background: var(--card);
-    border: 1px solid var(--border);
-    backdrop-filter: blur(18px) saturate(1.4);
-    -webkit-backdrop-filter: blur(18px) saturate(1.4);
-    box-shadow: var(--shadow), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    border-radius: var(--radius);
+    padding: 36px 32px;
+    box-shadow: var(--shadow);
+    margin-top: 40px;
   }
-
-  /* ===== Header ===== */
-  .header {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    margin-bottom: 22px;
-  }
-  .header h1 {
-    font-size: 30px;
-    font-weight: 800;
-    letter-spacing: 2px;
+  .auth-card h1 {
+    font-size: 26px;
     display: flex;
     align-items: center;
-    gap: 12px;
-    background: linear-gradient(90deg, var(--cyan), #7dd3fc 30%, var(--magenta) 70%, var(--pink));
-    background-size: 220% 100%;
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    animation: flowText 6s linear infinite;
-    filter: drop-shadow(0 0 14px var(--glow-cyan));
+    gap: 10px;
+    justify-content: center;
   }
-  @keyframes flowText {
-    0% { background-position: 0% 50%; }
-    100% { background-position: 220% 50%; }
-  }
-  .header .logo {
-    width: 42px; height: 42px;
-    border-radius: 12px;
+  .auth-card h1 .logo {
+    width: 38px; height: 38px;
+    background: linear-gradient(135deg, var(--primary), #9a6bff);
+    border-radius: 11px;
     display: grid;
     place-items: center;
-    color: #031018;
-    background: linear-gradient(135deg, var(--cyan), var(--magenta));
-    box-shadow: 0 0 18px var(--glow-cyan), 0 0 40px var(--glow-magenta);
-    -webkit-text-fill-color: #031018;
-    animation: logoPulse 2.6s ease-in-out infinite;
+    color: #fff;
+    box-shadow: var(--shadow);
   }
-  @keyframes logoPulse {
-    0%, 100% { box-shadow: 0 0 14px var(--glow-cyan), 0 0 30px var(--glow-magenta); }
-    50%      { box-shadow: 0 0 24px var(--glow-cyan), 0 0 56px var(--glow-magenta); }
+  .auth-sub {
+    text-align: center;
+    color: var(--text-soft);
+    font-size: 14px;
+    margin: 12px 0 24px;
   }
-  .status-line {
+  .auth-card input {
+    width: 100%;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--bg);
+    color: var(--text);
+    padding: 12px 14px;
+    font-size: 15px;
+    outline: none;
+    margin-bottom: 12px;
+    transition: border-color .2s;
+  }
+  .auth-card input:focus { border-color: var(--primary); }
+  .auth-btns { display: flex; gap: 10px; margin-top: 4px; }
+  .auth-btns .add-btn { flex: 1; justify-content: center; padding: 12px 0; }
+  .reg-btn {
+    flex: 1;
+    border: 1px solid var(--primary);
+    border-radius: 10px;
+    background: transparent;
+    color: var(--primary);
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .2s;
+  }
+  .reg-btn:hover { background: var(--primary-soft); }
+  .auth-msg {
+    margin-top: 14px;
+    font-size: 13px;
+    text-align: center;
+    color: var(--danger);
+    min-height: 18px;
+    word-break: break-all;
+  }
+  .auth-msg.ok { color: var(--success); }
+
+  /* ---------- 用户栏 ---------- */
+  .user-bar {
     display: flex;
     align-items: center;
-    gap: 8px;
-    margin-top: 8px;
-    font-family: "Consolas", "Cascadia Code", monospace;
-    font-size: 12px;
-    letter-spacing: 1px;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-bottom: 14px;
+    font-size: 13px;
     color: var(--text-soft);
   }
-  .status-line .dot {
-    width: 7px; height: 7px;
-    border-radius: 50%;
-    background: #22e56b;
-    box-shadow: 0 0 8px #22e56b, 0 0 16px rgba(34, 229, 107, .6);
-    animation: blink 1.6s ease-in-out infinite;
+  .user-bar .user-email {
+    max-width: 240px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
-  @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: .35; } }
+  .logout-btn {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--card);
+    color: var(--text-soft);
+    font-size: 12px;
+    padding: 5px 12px;
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .logout-btn:hover { color: var(--danger); border-color: var(--danger); background: var(--danger-soft); }
 
+  /* ---------- Header ---------- */
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  .header h1 {
+    font-size: 28px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .header h1 .logo {
+    width: 38px; height: 38px;
+    background: linear-gradient(135deg, var(--primary), #9a6bff);
+    border-radius: 11px;
+    display: grid;
+    place-items: center;
+    color: #fff;
+    box-shadow: var(--shadow);
+  }
+  .header .date {
+    font-size: 13px;
+    color: var(--text-soft);
+    margin-top: 4px;
+  }
   .icon-btn {
-    width: 42px; height: 42px;
+    width: 40px; height: 40px;
     border-radius: 12px;
     border: 1px solid var(--border);
     background: var(--card);
-    color: var(--cyan);
+    color: var(--text-soft);
     cursor: pointer;
     display: grid;
     place-items: center;
-    backdrop-filter: blur(12px);
-    transition: all .25s;
-    box-shadow: 0 0 0 transparent;
+    transition: all .2s;
   }
-  .icon-btn:hover {
-    border-color: var(--cyan);
-    box-shadow: 0 0 16px var(--glow-cyan), inset 0 0 10px rgba(0, 243, 255, .12);
-    transform: translateY(-2px);
-  }
+  .icon-btn:hover { color: var(--primary); border-color: var(--primary); }
 
-  /* ===== 进度面板 ===== */
+  /* ---------- Progress ---------- */
   .progress-card {
-    border-radius: 18px;
-    padding: 20px 22px;
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    box-shadow: var(--shadow);
     margin-bottom: 18px;
     display: flex;
     align-items: center;
-    gap: 18px;
-    position: relative;
-    overflow: hidden;
+    gap: 16px;
   }
-  .progress-card::before {
-    /* 顶部流光描边 */
-    content: "";
-    position: absolute;
-    top: 0; left: -30%;
-    width: 40%; height: 1px;
-    background: linear-gradient(90deg, transparent, var(--cyan), transparent);
-    animation: edgeRun 3.4s linear infinite;
-  }
-  @keyframes edgeRun {
-    0% { left: -30%; }
-    100% { left: 110%; }
-  }
-  .progress-ring { position: relative; width: 60px; height: 60px; flex-shrink: 0; }
+  .progress-ring { position: relative; width: 56px; height: 56px; flex-shrink: 0; }
   .progress-ring svg { transform: rotate(-90deg); }
   .progress-ring .track { stroke: var(--border); }
   .progress-ring .bar {
-    stroke: url(#ringGrad);
+    stroke: var(--primary);
     stroke-linecap: round;
-    transition: stroke-dashoffset .6s cubic-bezier(.22, 1, .36, 1);
-    filter: drop-shadow(0 0 5px var(--glow-cyan));
+    transition: stroke-dashoffset .5s ease;
   }
   .progress-ring .pct {
     position: absolute; inset: 0;
     display: grid; place-items: center;
     font-size: 13px; font-weight: 700;
-    font-family: "Consolas", monospace;
-    color: var(--cyan);
-    text-shadow: 0 0 8px var(--glow-cyan);
   }
-  .progress-info .num {
-    font-size: 16px; font-weight: 700; letter-spacing: .5px;
-  }
-  .progress-info .tip {
-    font-size: 13px; color: var(--text-soft); margin-top: 4px;
-  }
+  .progress-info .num { font-size: 16px; font-weight: 700; }
+  .progress-info .tip { font-size: 13px; color: var(--text-soft); margin-top: 2px; }
 
-  /* ===== 输入面板 ===== */
+  /* ---------- Input ---------- */
   .input-card {
-    border-radius: 18px;
+    background: var(--card);
+    border-radius: var(--radius);
     padding: 12px;
-    margin-bottom: 18px;
+    box-shadow: var(--shadow);
     display: flex;
-    gap: 10px;
-    transition: box-shadow .3s, border-color .3s;
-  }
-  .input-card:focus-within {
-    border-color: var(--cyan);
-    box-shadow: var(--shadow), 0 0 22px var(--glow-cyan), inset 0 0 14px rgba(0, 243, 255, .06);
+    gap: 8px;
+    margin-bottom: 18px;
   }
   .input-card input[type="text"] {
     flex: 1;
@@ -262,174 +233,102 @@
     color: var(--text);
     font-size: 15px;
     padding: 10px 12px;
-    letter-spacing: .3px;
   }
   .input-card input[type="text"]::placeholder { color: var(--text-soft); }
   .input-card select {
     border: 1px solid var(--border);
     border-radius: 10px;
-    background: var(--input-bg);
+    background: var(--bg);
     color: var(--text);
-    padding: 0 10px;
+    padding: 0 8px;
     font-size: 13px;
     outline: none;
     cursor: pointer;
   }
-  .input-card select option { background: var(--card-solid); color: var(--text); }
-
   .add-btn {
-    position: relative;
-    overflow: hidden;
-    border: 1px solid var(--cyan);
+    background: var(--primary);
+    color: #fff;
+    border: none;
     border-radius: 10px;
-    padding: 0 22px;
+    padding: 0 20px;
     font-size: 15px;
-    font-weight: 700;
-    letter-spacing: 1px;
+    font-weight: 600;
     cursor: pointer;
-    color: #031018;
-    background: linear-gradient(135deg, var(--cyan-bright), var(--cyan) 55%, #38bdf8);
-    box-shadow: 0 0 16px var(--glow-cyan), inset 0 1px 0 rgba(255, 255, 255, .4);
     display: flex;
     align-items: center;
     gap: 6px;
-    transition: all .2s;
+    transition: background .2s, transform .1s;
   }
-  [data-theme="dark"] .add-btn { color: #02121a; }
-  .add-btn::after {
-    content: "";
-    position: absolute;
-    top: 0; left: -80%;
-    width: 50%; height: 100%;
-    background: linear-gradient(100deg, transparent, rgba(255, 255, 255, .55), transparent);
-    transform: skewX(-20deg);
-    animation: sweep 3.2s ease-in-out infinite;
-  }
-  @keyframes sweep {
-    0%, 60% { left: -80%; }
-    100% { left: 130%; }
-  }
-  .add-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 0 26px var(--glow-cyan), 0 0 50px var(--glow-magenta);
-  }
+  .add-btn:hover { background: var(--primary-dark); }
   .add-btn:active { transform: scale(.96); }
+  .add-btn:disabled { opacity: .6; cursor: not-allowed; }
 
-  /* ===== 工具栏 ===== */
+  /* ---------- Filters ---------- */
   .toolbar {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 14px;
+    margin-bottom: 12px;
     flex-wrap: wrap;
     gap: 8px;
   }
-  .filters {
-    display: flex; gap: 4px;
-    padding: 5px;
-    border-radius: 13px;
-  }
+  .filters { display: flex; gap: 6px; background: var(--card); padding: 4px; border-radius: 12px; box-shadow: var(--shadow); }
   .filter-btn {
     border: none;
     background: transparent;
     color: var(--text-soft);
-    padding: 7px 16px;
+    padding: 7px 14px;
     border-radius: 9px;
     font-size: 13px;
     font-weight: 600;
-    letter-spacing: 1px;
     cursor: pointer;
-    transition: all .25s;
-    position: relative;
+    transition: all .2s;
   }
-  .filter-btn.active {
-    color: var(--cyan);
-    background: var(--tag-bg);
-    text-shadow: 0 0 10px var(--glow-cyan);
-    box-shadow: inset 0 0 0 1px var(--border), 0 0 14px var(--glow-cyan);
-  }
-  .filter-btn:not(.active):hover { color: var(--text); }
-
+  .filter-btn.active { background: var(--primary-soft); color: var(--primary); }
   .clear-btn {
-    border: 1px solid transparent;
+    border: none;
     background: transparent;
     color: var(--text-soft);
     font-size: 13px;
     cursor: pointer;
-    padding: 7px 12px;
-    border-radius: 9px;
-    transition: all .25s;
-    letter-spacing: .5px;
+    padding: 6px 10px;
+    border-radius: 8px;
   }
-  .clear-btn:hover {
-    color: #ff5c7a;
-    border-color: rgba(255, 92, 122, .4);
-    background: rgba(255, 61, 100, .08);
-    text-shadow: 0 0 10px rgba(255, 61, 100, .6);
-  }
+  .clear-btn:hover { color: var(--danger); background: var(--danger-soft); }
 
-  /* ===== 任务列表 ===== */
+  /* ---------- List ---------- */
   .list { display: flex; flex-direction: column; gap: 10px; }
   .item {
+    background: var(--card);
     border-radius: 14px;
     padding: 14px 16px;
+    box-shadow: var(--shadow);
     display: flex;
     align-items: center;
     gap: 12px;
-    position: relative;
-    overflow: hidden;
-    animation: slideIn .35s cubic-bezier(.22, 1, .36, 1);
-    transition: transform .25s, box-shadow .25s, border-color .25s;
-  }
-  .item::before {
-    /* 左侧优先级能量条 */
-    content: "";
-    position: absolute;
-    left: 0; top: 15%;
-    width: 3px; height: 70%;
-    border-radius: 0 3px 3px 0;
-    background: var(--accent, var(--cyan));
-    box-shadow: 0 0 10px var(--accent, var(--cyan)), 0 0 20px var(--accent, var(--cyan));
-    opacity: .85;
-  }
-  .item.p-high { --accent: #ff3d6e; }
-  .item.p-medium { --accent: var(--cyan); }
-  .item.p-low { --accent: #22e56b; }
-  .item:hover {
-    transform: translateY(-2px);
-    border-color: var(--cyan);
-    box-shadow: var(--shadow), 0 0 20px var(--glow-cyan), inset 0 0 18px rgba(0, 243, 255, .04);
+    animation: slideIn .25s ease;
   }
   @keyframes slideIn {
-    from { opacity: 0; transform: translateY(-10px) scale(.98); }
-    to { opacity: 1; transform: translateY(0) scale(1); }
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: translateY(0); }
   }
-  .item.removing { animation: slideOut .22s ease forwards; }
+  .item.removing { animation: slideOut .2s ease forwards; }
   @keyframes slideOut {
-    to { opacity: 0; transform: translateX(40px); filter: blur(2px); }
+    to { opacity: 0; transform: translateX(30px); }
   }
-
   .check {
     width: 22px; height: 22px;
-    border: 2px solid var(--text-soft);
+    border: 2px solid var(--border);
     border-radius: 50%;
     cursor: pointer;
     flex-shrink: 0;
     display: grid;
     place-items: center;
-    transition: all .25s;
-    background: transparent;
+    transition: all .2s;
   }
-  .check:hover {
-    border-color: var(--cyan);
-    box-shadow: 0 0 12px var(--glow-cyan);
-  }
-  .item.done .check {
-    background: var(--cyan);
-    border-color: var(--cyan);
-    box-shadow: 0 0 12px var(--glow-cyan), 0 0 24px var(--glow-cyan);
-  }
-  .check svg { width: 12px; height: 12px; stroke: #04121a; stroke-width: 3.4; fill: none; opacity: 0; }
+  .check:hover { border-color: var(--primary); }
+  .item.done .check { background: var(--success); border-color: var(--success); }
+  .check svg { width: 12px; height: 12px; stroke: #fff; stroke-width: 3; fill: none; opacity: 0; }
   .item.done .check svg { opacity: 1; }
 
   .item-body { flex: 1; min-width: 0; }
@@ -437,34 +336,31 @@
     font-size: 15px;
     word-break: break-word;
     cursor: text;
-    letter-spacing: .3px;
   }
   .item.done .item-text { color: var(--text-soft); text-decoration: line-through; }
   .item-text-edit {
     width: 100%;
     font-size: 15px;
-    border: 1px solid var(--cyan);
+    border: 1px solid var(--primary);
     border-radius: 8px;
     padding: 4px 8px;
     outline: none;
-    background: var(--input-bg);
+    background: var(--bg);
     color: var(--text);
-    box-shadow: 0 0 12px var(--glow-cyan);
   }
-  .item-meta { display: flex; gap: 8px; margin-top: 6px; align-items: center; }
+  .item-meta { display: flex; gap: 8px; margin-top: 5px; align-items: center; }
   .tag {
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 1px;
-    padding: 2px 9px;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
     border-radius: 20px;
-    border: 1px solid;
-    font-family: "Consolas", monospace;
   }
-  .tag.high { color: #ff5c7a; border-color: rgba(255, 61, 110, .45); background: rgba(255, 61, 110, .08); text-shadow: 0 0 8px rgba(255, 61, 110, .6); }
-  .tag.medium { color: var(--cyan); border-color: var(--border); background: var(--tag-bg); text-shadow: 0 0 8px var(--glow-cyan); }
-  .tag.low { color: #2be574; border-color: rgba(34, 229, 107, .4); background: rgba(34, 229, 107, .07); text-shadow: 0 0 8px rgba(34, 229, 107, .55); }
-  .item-time { font-size: 11px; color: var(--text-soft); font-family: "Consolas", monospace; }
+  .tag.high { color: var(--danger); background: var(--danger-soft); }
+  .tag.medium { color: #b45309; background: #fef6e4; }
+  .tag.low { color: var(--success); background: #eafaf0; }
+  [data-theme="dark"] .tag.medium { color: #fbbf24; background: #3a3320; }
+  [data-theme="dark"] .tag.low { color: #4ade80; background: #1d3326; }
+  .item-time { font-size: 11px; color: var(--text-soft); }
 
   .item-actions { display: flex; gap: 4px; opacity: 0; transition: opacity .2s; }
   .item:hover .item-actions { opacity: 1; }
@@ -477,109 +373,112 @@
     cursor: pointer;
     display: grid;
     place-items: center;
-    transition: all .18s;
+    transition: all .15s;
   }
-  .act:hover { background: var(--tag-bg); color: var(--cyan); box-shadow: 0 0 10px var(--glow-cyan); }
-  .act.del:hover { color: #ff5c7a; background: rgba(255, 61, 110, .1); box-shadow: 0 0 10px rgba(255, 61, 110, .4); }
+  .act:hover { background: var(--primary-soft); color: var(--primary); }
+  .act.del:hover { background: var(--danger-soft); color: var(--danger); }
 
-  /* ===== 空状态 ===== */
+  /* ---------- Empty ---------- */
   .empty {
     text-align: center;
-    padding: 60px 20px;
+    padding: 56px 20px;
     color: var(--text-soft);
   }
   .empty .icon {
-    width: 76px; height: 76px;
-    margin: 0 auto 16px;
+    width: 72px; height: 72px;
+    margin: 0 auto 14px;
+    background: var(--primary-soft);
     border-radius: 50%;
     display: grid;
     place-items: center;
-    border: 1px solid var(--border);
-    background: var(--tag-bg);
-    box-shadow: 0 0 24px var(--glow-cyan), inset 0 0 18px rgba(0, 243, 255, .08);
-    animation: floatY 3s ease-in-out infinite;
   }
-  @keyframes floatY {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-7px); }
-  }
-  .empty p { font-size: 14px; letter-spacing: .5px; }
+  .empty p { font-size: 14px; }
 
   footer {
     text-align: center;
-    margin-top: 28px;
-    font-size: 11px;
-    letter-spacing: 2px;
+    margin-top: 26px;
+    font-size: 12px;
     color: var(--text-soft);
-    font-family: "Consolas", monospace;
-    text-transform: uppercase;
   }
-  footer span { color: var(--cyan); text-shadow: 0 0 8px var(--glow-cyan); }
 
   @media (max-width: 480px) {
-    .header h1 { font-size: 24px; letter-spacing: 1px; }
     .input-card { flex-wrap: wrap; }
     .input-card input[type="text"] { flex-basis: 100%; }
     .add-btn { flex: 1; justify-content: center; padding: 10px; }
     .item-actions { opacity: 1; }
+    .auth-card { padding: 28px 20px; }
   }
 </style>
 </head>
 <body>
-<canvas id="bgCanvas"></canvas>
 
-<div class="app">
+<!-- ============ 登录/注册视图 ============ -->
+<div class="app" id="authView" style="display:none">
+  <div class="auth-card">
+    <h1>
+      <span class="logo">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+      </span>
+      1的待办事项
+    </h1>
+    <p class="auth-sub">登录后任务保存在云端，换设备也不会丢失</p>
+    <input type="email" id="emailInput" placeholder="邮箱" autocomplete="email">
+    <input type="password" id="passwordInput" placeholder="密码（至少 6 位）" autocomplete="current-password">
+    <div class="auth-btns">
+      <button class="add-btn" id="loginBtn">登录</button>
+      <button class="reg-btn" id="registerBtn">注册新账号</button>
+    </div>
+    <div class="auth-msg" id="authMsg"></div>
+  </div>
+</div>
+
+<!-- ============ 主应用视图 ============ -->
+<div class="app" id="appView" style="display:none">
+  <div class="user-bar">
+    <span class="user-email" id="userEmail"></span>
+    <button class="logout-btn" id="logoutBtn">退出登录</button>
+  </div>
+
   <!-- Header -->
   <div class="header">
     <div>
       <h1>
         <span class="logo">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
         </span>
-        NEXUS TODO
+        1的待办事项
       </h1>
-      <div class="status-line">
-        <span class="dot"></span>
-        <span>SYSTEM ONLINE</span>
-        <span>·</span>
-        <span id="today"></span>
-      </div>
+      <div class="date" id="today"></div>
     </div>
-    <button class="icon-btn glass" id="themeBtn" title="切换深空/亮色模式">
+    <button class="icon-btn" id="themeBtn" title="切换深色/浅色">
       <svg id="iconMoon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
       <svg id="iconSun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
     </button>
   </div>
 
   <!-- Progress -->
-  <div class="progress-card glass">
+  <div class="progress-card">
     <div class="progress-ring">
-      <svg width="60" height="60">
-        <defs>
-          <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#00f3ff"/>
-            <stop offset="100%" stop-color="#a855f7"/>
-          </linearGradient>
-        </defs>
-        <circle class="track" cx="30" cy="30" r="26" fill="none" stroke-width="6"/>
-        <circle class="bar" id="ringBar" cx="30" cy="30" r="26" fill="none" stroke-width="6"
-                stroke-dasharray="163.4" stroke-dashoffset="163.4"/>
+      <svg width="56" height="56">
+        <circle class="track" cx="28" cy="28" r="24" fill="none" stroke-width="6"/>
+        <circle class="bar" id="ringBar" cx="28" cy="28" r="24" fill="none" stroke-width="6"
+                stroke-dasharray="150.8" stroke-dashoffset="150.8"/>
       </svg>
       <div class="pct" id="ringPct">0%</div>
     </div>
     <div class="progress-info">
-      <div class="num" id="progressNum">等待任务接入</div>
-      <div class="tip" id="progressTip">在下方录入你的第一个任务节点</div>
+      <div class="num" id="progressNum">还没有任务</div>
+      <div class="tip" id="progressTip">在下方添加你的第一个待办事项吧</div>
     </div>
   </div>
 
   <!-- Input -->
-  <div class="input-card glass">
-    <input type="text" id="taskInput" placeholder="输入任务指令，回车快速创建…" maxlength="120">
+  <div class="input-card">
+    <input type="text" id="taskInput" placeholder="添加一个新任务，回车快速创建…" maxlength="120">
     <select id="prioritySelect" title="优先级">
-      <option value="high">HIGH · 高</option>
-      <option value="medium" selected>NORMAL · 中</option>
-      <option value="low">LOW · 低</option>
+      <option value="high">高优先级</option>
+      <option value="medium" selected>中优先级</option>
+      <option value="low">低优先级</option>
     </select>
     <button class="add-btn" id="addBtn">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
@@ -589,7 +488,7 @@
 
   <!-- Toolbar -->
   <div class="toolbar">
-    <div class="filters glass">
+    <div class="filters">
       <button class="filter-btn active" data-filter="all">全部</button>
       <button class="filter-btn" data-filter="active">进行中</button>
       <button class="filter-btn" data-filter="done">已完成</button>
@@ -600,53 +499,243 @@
   <!-- List -->
   <div class="list" id="list"></div>
 
-  <footer><span>//</span> DATA STORED LOCALLY · POWERED BY NEXUS GRID</footer>
+  <footer>任务保存在云端 · 已登录账号的数据相互隔离</footer>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
 (function () {
   "use strict";
 
-  var STORAGE_KEY = "todo-list-v1";
+  /* =====================================================
+     Supabase 配置：注册项目后把下面两个值替换成你自己的
+     Project URL 和 anon public key（Dashboard → Settings → API）
+  ===================================================== */
+  var SUPABASE_URL = "https://cmaegnrmujcwbkcbokwr.supabase.co";
+  var SUPABASE_ANON_KEY = "sb_publishable_bPh9ChbdZCWEZWIpDbM9Og_yC1u3iCV";
   var THEME_KEY = "todo-theme";
 
-  var state = { tasks: [], filter: "all" };
+  var db = null;           // supabase 客户端
+  var currentUser = null;  // 当前登录用户
 
-  /* ---------- Storage ---------- */
-  function load() {
-    try {
-      var raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) state.tasks = JSON.parse(raw) || [];
-    } catch (e) { state.tasks = []; }
-  }
-  function save() {
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state.tasks)); } catch (e) {}
-  }
+  var state = {
+    tasks: [],
+    filter: "all"
+  };
 
-  /* ---------- Helpers ---------- */
-  function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
+  /* ---------- 工具 ---------- */
   function escapeHtml(s) {
     return String(s).replace(/[&<>"']/g, function (c) {
       return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
     });
   }
+
   function formatTime(ts) {
     var d = new Date(ts);
     var now = new Date();
     var sameDay = d.toDateString() === now.toDateString();
     var pad = function (n) { return n < 10 ? "0" + n : n; };
     var hm = pad(d.getHours()) + ":" + pad(d.getMinutes());
-    if (sameDay) return "TODAY " + hm;
-    return pad(d.getMonth() + 1) + "-" + pad(d.getDate()) + " " + hm;
+    if (sameDay) return "今天 " + hm;
+    return (d.getMonth() + 1) + "月" + d.getDate() + "日 " + hm;
   }
-  var priorityText = { high: "HIGH", medium: "NORMAL", low: "LOW" };
+
+  var priorityText = { high: "高", medium: "中", low: "低" };
+
+  function translateAuthError(msg) {
+    if (!msg) return "未知错误";
+    if (msg.indexOf("Invalid login credentials") > -1) return "邮箱或密码错误";
+    if (msg.indexOf("User already registered") > -1) return "该邮箱已注册，请直接登录";
+    if (msg.indexOf("Email not confirmed") > -1) return "请先到邮箱点击确认链接，再登录";
+    if (msg.indexOf("at least") > -1 && msg.indexOf("characters") > -1) return "密码太短，至少需要 6 位";
+    if (msg.toLowerCase().indexOf("invalid email") > -1 || msg.indexOf("validate email") > -1) return "邮箱格式不正确";
+    if (msg.indexOf("Failed to fetch") > -1 || msg.indexOf("fetch") > -1) return "网络连接失败，请检查网络后重试";
+    return msg;
+  }
 
   /* ---------- DOM ---------- */
+  var authView = document.getElementById("authView");
+  var appView = document.getElementById("appView");
+  var emailEl = document.getElementById("emailInput");
+  var passEl = document.getElementById("passwordInput");
+  var authMsgEl = document.getElementById("authMsg");
   var listEl = document.getElementById("list");
   var inputEl = document.getElementById("taskInput");
   var priorityEl = document.getElementById("prioritySelect");
 
-  /* ---------- Render ---------- */
+  function showAuthMsg(text, ok) {
+    authMsgEl.textContent = text || "";
+    authMsgEl.className = "auth-msg" + (ok ? " ok" : "");
+  }
+
+  /* ---------- 视图切换 ---------- */
+  function showAuth() {
+    authView.style.display = "";
+    appView.style.display = "none";
+  }
+  function enterApp(user) {
+    currentUser = user;
+    document.getElementById("userEmail").textContent = user.email;
+    authView.style.display = "none";
+    appView.style.display = "";
+    loadTasks();
+  }
+
+  /* ---------- 登录/注册 ---------- */
+  async function doLogin() {
+    showAuthMsg("");
+    var email = emailEl.value.trim();
+    var pass = passEl.value;
+    if (!email || !pass) { showAuthMsg("请输入邮箱和密码"); return; }
+    var btn = document.getElementById("loginBtn");
+    btn.disabled = true;
+    try {
+      var res = await db.auth.signInWithPassword({ email: email, password: pass });
+      if (res.error) { showAuthMsg(translateAuthError(res.error.message)); return; }
+      enterApp(res.data.user);
+    } finally {
+      btn.disabled = false;
+    }
+  }
+
+  async function doRegister() {
+    showAuthMsg("");
+    var email = emailEl.value.trim();
+    var pass = passEl.value;
+    if (!email || !pass) { showAuthMsg("请输入邮箱和密码"); return; }
+    if (pass.length < 6) { showAuthMsg("密码太短，至少需要 6 位"); return; }
+    var btn = document.getElementById("registerBtn");
+    btn.disabled = true;
+    try {
+      var res = await db.auth.signUp({ email: email, password: pass });
+      if (res.error) { showAuthMsg(translateAuthError(res.error.message)); return; }
+      if (res.data.session) {
+        enterApp(res.data.user);
+      } else {
+        showAuthMsg("注册成功！请先到邮箱点击确认链接，再回来登录", true);
+      }
+    } finally {
+      btn.disabled = false;
+    }
+  }
+
+  async function doLogout() {
+    await db.auth.signOut();
+    currentUser = null;
+    state.tasks = [];
+    emailEl.value = "";
+    passEl.value = "";
+    showAuth();
+  }
+
+  /* ---------- 云端数据操作 ---------- */
+  function rowToTask(row) {
+    return {
+      id: row.id,
+      text: row.text,
+      done: row.done,
+      priority: row.priority,
+      createdAt: new Date(row.created_at).getTime()
+    };
+  }
+
+  async function loadTasks() {
+    var res = await db.from("todos")
+      .select("*")
+      .order("created_at", { ascending: false });
+    if (res.error) { alert("读取任务失败：" + res.error.message); return; }
+    state.tasks = res.data.map(rowToTask);
+    render();
+  }
+
+  async function addTask() {
+    var text = inputEl.value.trim();
+    if (!text) { inputEl.focus(); return; }
+    var btn = document.getElementById("addBtn");
+    btn.disabled = true;
+    try {
+      var res = await db.from("todos")
+        .insert({ user_id: currentUser.id, text: text, done: false, priority: priorityEl.value })
+        .select()
+        .single();
+      if (res.error) { alert("添加失败：" + res.error.message); return; }
+      state.tasks.push(rowToTask(res.data));
+      inputEl.value = "";
+      render();
+    } finally {
+      btn.disabled = false;
+      inputEl.focus();
+    }
+  }
+
+  async function toggleTask(id) {
+    var t = state.tasks.find(function (x) { return x.id === id; });
+    if (!t) return;
+    var newDone = !t.done;
+    var res = await db.from("todos").update({ done: newDone }).eq("id", id);
+    if (res.error) { alert("更新失败：" + res.error.message); return; }
+    t.done = newDone;
+    render();
+  }
+
+  async function deleteTask(id) {
+    var el = listEl.querySelector('.item[data-id="' + id + '"]');
+    if (el) {
+      el.classList.add("removing");
+      setTimeout(async function () {
+        var res = await db.from("todos").delete().eq("id", id);
+        if (res.error) { alert("删除失败：" + res.error.message); return; }
+        state.tasks = state.tasks.filter(function (x) { return x.id !== id; });
+        render();
+      }, 180);
+    }
+  }
+
+  async function clearDone() {
+    var count = state.tasks.filter(function (t) { return t.done; }).length;
+    if (count === 0) return;
+    if (!confirm("确定要清除 " + count + " 项已完成的任务吗？")) return;
+    var res = await db.from("todos").delete().eq("done", true).eq("user_id", currentUser.id);
+    if (res.error) { alert("清除失败：" + res.error.message); return; }
+    state.tasks = state.tasks.filter(function (t) { return !t.done; });
+    render();
+  }
+
+  function startEdit(id, target) {
+    var t = state.tasks.find(function (x) { return x.id === id; });
+    if (!t) return;
+    var textEl = target.closest(".item-body").querySelector(".item-text");
+    var input = document.createElement("input");
+    input.type = "text";
+    input.className = "item-text-edit";
+    input.value = t.text;
+    input.maxLength = 120;
+    textEl.replaceWith(input);
+    input.focus();
+    input.setSelectionRange(input.value.length, input.value.length);
+
+    var finished = false;
+    async function commit(saveChange) {
+      if (finished) return;
+      finished = true;
+      if (saveChange) {
+        var v = input.value.trim();
+        if (v && v !== t.text) {
+          var res = await db.from("todos").update({ text: v }).eq("id", t.id);
+          if (res.error) { alert("保存失败：" + res.error.message); }
+          else { t.text = v; }
+        }
+      }
+      render();
+    }
+    input.addEventListener("blur", function () { commit(true); });
+    input.addEventListener("keydown", function (e) {
+      if (e.key === "Enter") { e.preventDefault(); commit(true); }
+      if (e.key === "Escape") { commit(false); }
+    });
+  }
+
+  /* ---------- 渲染 ---------- */
   function visibleTasks() {
     var tasks = state.tasks.slice().sort(function (a, b) {
       if (a.done !== b.done) return a.done ? 1 : -1;
@@ -666,10 +755,10 @@
     if (state.tasks.length === 0) {
       listEl.innerHTML =
         '<div class="empty"><div class="icon">' +
-        '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--cyan);filter:drop-shadow(0 0 6px var(--glow-cyan))"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>' +
-        "</div><p>// 暂无任务节点，录入一条以启动今日议程</p></div>";
+        '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#5b6cff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>' +
+        "</div><p>暂无任务，添加一个开始安排你的一天</p></div>";
     } else if (tasks.length === 0) {
-      var msg = state.filter === "done" ? "// 尚未检索到已完成记录" : "MISSION COMPLETE · 全部任务已达成";
+      var msg = state.filter === "done" ? "还没有完成的任务" : "太棒了，所有任务都已完成";
       listEl.innerHTML = '<div class="empty"><p>' + msg + "</p></div>";
     } else {
       tasks.forEach(function (t) { listEl.appendChild(renderItem(t)); });
@@ -679,7 +768,7 @@
 
   function renderItem(t) {
     var item = document.createElement("div");
-    item.className = "item glass p-" + t.priority + (t.done ? " done" : "");
+    item.className = "item" + (t.done ? " done" : "");
     item.dataset.id = t.id;
     item.innerHTML =
       '<div class="check" data-act="toggle" title="标记完成">' +
@@ -688,7 +777,7 @@
       '<div class="item-body">' +
         '<div class="item-text" data-act="edit">' + escapeHtml(t.text) + "</div>" +
         '<div class="item-meta">' +
-          '<span class="tag ' + t.priority + '">' + priorityText[t.priority] + "</span>" +
+          '<span class="tag ' + t.priority + '">' + priorityText[t.priority] + "优先级</span>" +
           '<span class="item-time">' + formatTime(t.createdAt) + "</span>" +
         "</div>" +
       "</div>" +
@@ -708,7 +797,7 @@
     var done = state.tasks.filter(function (t) { return t.done; }).length;
     var pct = total === 0 ? 0 : Math.round(done / total * 100);
 
-    var CIRC = 2 * Math.PI * 26; // 163.4
+    var CIRC = 2 * Math.PI * 24;
     document.getElementById("ringBar").style.strokeDasharray = CIRC;
     document.getElementById("ringBar").style.strokeDashoffset = CIRC * (1 - pct / 100);
     document.getElementById("ringPct").textContent = pct + "%";
@@ -716,80 +805,26 @@
     var numEl = document.getElementById("progressNum");
     var tipEl = document.getElementById("progressTip");
     if (total === 0) {
-      numEl.textContent = "等待任务接入";
-      tipEl.textContent = "在下方录入你的第一个任务节点";
+      numEl.textContent = "还没有任务";
+      tipEl.textContent = "在下方添加你的第一个待办事项吧";
     } else {
       numEl.textContent = "已完成 " + done + " / " + total + " 项";
       var left = total - done;
-      tipEl.textContent = left === 0 ? "MISSION COMPLETE · 议程全部达成" : "剩余 " + left + " 项任务待处理";
+      tipEl.textContent = left === 0 ? "全部完成，给自己点个赞吧" : "还有 " + left + " 项待完成，加油！";
     }
   }
 
-  /* ---------- Actions ---------- */
-  function addTask() {
-    var text = inputEl.value.trim();
-    if (!text) { inputEl.focus(); return; }
-    state.tasks.push({
-      id: uid(),
-      text: text,
-      done: false,
-      priority: priorityEl.value,
-      createdAt: Date.now()
-    });
-    inputEl.value = "";
-    save();
-    render();
-    inputEl.focus();
-  }
-  function toggleTask(id) {
-    var t = state.tasks.find(function (x) { return x.id === id; });
-    if (t) { t.done = !t.done; save(); render(); }
-  }
-  function deleteTask(id) {
-    var el = listEl.querySelector('.item[data-id="' + id + '"]');
-    if (el) {
-      el.classList.add("removing");
-      setTimeout(function () {
-        state.tasks = state.tasks.filter(function (x) { return x.id !== id; });
-        save(); render();
-      }, 200);
-    }
-  }
-  function startEdit(id, target) {
-    var t = state.tasks.find(function (x) { return x.id === id; });
-    if (!t) return;
-    var textEl = target.closest(".item-body").querySelector(".item-text");
-    var input = document.createElement("input");
-    input.type = "text";
-    input.className = "item-text-edit";
-    input.value = t.text;
-    input.maxLength = 120;
-    textEl.replaceWith(input);
-    input.focus();
-    input.setSelectionRange(input.value.length, input.value.length);
-
-    var finished = false;
-    function commit(saveChange) {
-      if (finished) return;
-      finished = true;
-      if (saveChange) {
-        var v = input.value.trim();
-        if (v) { t.text = v; save(); }
-      }
-      render();
-    }
-    input.addEventListener("blur", function () { commit(true); });
-    input.addEventListener("keydown", function (e) {
-      if (e.key === "Enter") { e.preventDefault(); commit(true); }
-      if (e.key === "Escape") { commit(false); }
-    });
-  }
-
-  /* ---------- Events ---------- */
+  /* ---------- 事件 ---------- */
+  document.getElementById("loginBtn").addEventListener("click", doLogin);
+  document.getElementById("registerBtn").addEventListener("click", doRegister);
+  document.getElementById("logoutBtn").addEventListener("click", doLogout);
   document.getElementById("addBtn").addEventListener("click", addTask);
+  emailEl.addEventListener("keydown", function (e) { if (e.key === "Enter") passEl.focus(); });
+  passEl.addEventListener("keydown", function (e) { if (e.key === "Enter") { e.preventDefault(); doLogin(); } });
   inputEl.addEventListener("keydown", function (e) {
     if (e.key === "Enter") { e.preventDefault(); addTask(); }
   });
+
   listEl.addEventListener("click", function (e) {
     var actEl = e.target.closest("[data-act]");
     if (!actEl) return;
@@ -801,6 +836,7 @@
     else if (act === "delete") deleteTask(id);
     else if (act === "edit") startEdit(id, actEl);
   });
+
   document.querySelectorAll(".filter-btn").forEach(function (btn) {
     btn.addEventListener("click", function () {
       document.querySelectorAll(".filter-btn").forEach(function (b) { b.classList.remove("active"); });
@@ -809,23 +845,19 @@
       render();
     });
   });
-  document.getElementById("clearDoneBtn").addEventListener("click", function () {
-    var count = state.tasks.filter(function (t) { return t.done; }).length;
-    if (count === 0) return;
-    if (confirm("确定要清除 " + count + " 项已完成的任务吗？")) {
-      state.tasks = state.tasks.filter(function (t) { return !t.done; });
-      save(); render();
-    }
-  });
 
-  /* ---------- Theme ---------- */
+  document.getElementById("clearDoneBtn").addEventListener("click", clearDone);
+
+  /* ---------- 主题 ---------- */
   function applyTheme(theme) {
     document.documentElement.setAttribute("data-theme", theme);
     document.getElementById("iconMoon").style.display = theme === "dark" ? "none" : "block";
     document.getElementById("iconSun").style.display = theme === "dark" ? "block" : "none";
-    if (window.__updateParticles) window.__updateParticles();
   }
-  var savedTheme = localStorage.getItem(THEME_KEY) || "dark";
+  var savedTheme = localStorage.getItem(THEME_KEY);
+  if (!savedTheme) {
+    savedTheme = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  }
   applyTheme(savedTheme);
   document.getElementById("themeBtn").addEventListener("click", function () {
     var cur = document.documentElement.getAttribute("data-theme");
@@ -834,127 +866,41 @@
     localStorage.setItem(THEME_KEY, next);
   });
 
-  /* ---------- Date ---------- */
-  var weekDays = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
+  /* ---------- 日期 ---------- */
+  var weekDays = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"];
   var now = new Date();
-  function pad2(n) { return n < 10 ? "0" + n : "" + n; }
   document.getElementById("today").textContent =
-    now.getFullYear() + "-" + pad2(now.getMonth() + 1) + "-" + pad2(now.getDate()) + " " + weekDays[now.getDay()];
+    now.getFullYear() + "年" + (now.getMonth() + 1) + "月" + now.getDate() + "日 " + weekDays[now.getDay()];
 
-  /* =====================================================
-     Canvas 粒子网络背景
-  ===================================================== */
-  (function particles() {
-    var canvas = document.getElementById("bgCanvas");
-    var ctx = canvas.getContext("2d");
-    var W = 0, H = 0, dots = [];
-    var mouse = { x: -9999, y: -9999 };
-    var COLORS = [[0, 243, 255], [168, 85, 247]];
-    var LINK_DIST = 120, MOUSE_DIST = 170;
-
-    function readColors() {
-      var s = getComputedStyle(document.documentElement);
-      var a = s.getPropertyValue("--particle-a").replace(/[ "\n]/g, "");
-      var b = s.getPropertyValue("--particle-b").replace(/[ "\n]/g, "");
-      COLORS = [a.split(",").map(Number), b.split(",").map(Number)];
+  /* ---------- 启动 ---------- */
+  function init() {
+    if (typeof supabase === "undefined") {
+      showAuth();
+      showAuthMsg("Supabase SDK 加载失败，请检查网络后刷新页面");
+      return;
     }
-
-    function resize() {
-      W = canvas.width = window.innerWidth;
-      H = canvas.height = window.innerHeight;
-      var count = Math.min(90, Math.floor(W * H / 16000));
-      dots = [];
-      for (var i = 0; i < count; i++) {
-        var c = Math.random() < 0.65 ? COLORS[0] : COLORS[1];
-        dots.push({
-          x: Math.random() * W,
-          y: Math.random() * H,
-          vx: (Math.random() - 0.5) * 0.35,
-          vy: (Math.random() - 0.5) * 0.35,
-          r: Math.random() * 1.6 + 0.6,
-          c: c
-        });
-      }
+    if (SUPABASE_URL.indexOf("__") === 0 || SUPABASE_ANON_KEY.indexOf("__") === 0) {
+      showAuth();
+      showAuthMsg("请先在 index.html 顶部填入 SUPABASE_URL 和 SUPABASE_ANON_KEY");
+      return;
     }
+    db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    function rgba(c, a) { return "rgba(" + c[0] + "," + c[1] + "," + c[2] + "," + a + ")"; }
-
-    function frame() {
-      ctx.clearRect(0, 0, W, H);
-      var i, j, d, dx, dy, dist;
-
-      for (i = 0; i < dots.length; i++) {
-        d = dots[i];
-        d.x += d.vx; d.y += d.vy;
-        if (d.x < 0 || d.x > W) d.vx *= -1;
-        if (d.y < 0 || d.y > H) d.vy *= -1;
-
-        // 鼠标轻微排斥
-        dx = d.x - mouse.x; dy = d.y - mouse.y;
-        dist = Math.hypot(dx, dy);
-        if (dist < MOUSE_DIST && dist > 0) {
-          d.x += (dx / dist) * 0.6;
-          d.y += (dy / dist) * 0.6;
-        }
-
-        ctx.beginPath();
-        ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
-        ctx.fillStyle = rgba(d.c, 0.8);
-        ctx.shadowBlur = 8;
-        ctx.shadowColor = rgba(d.c, 0.9);
-        ctx.fill();
+    db.auth.getSession().then(function (res) {
+      if (res.data.session) {
+        enterApp(res.data.session.user);
+      } else {
+        showAuth();
       }
-      ctx.shadowBlur = 0;
+    });
 
-      // 连线
-      for (i = 0; i < dots.length; i++) {
-        for (j = i + 1; j < dots.length; j++) {
-          dx = dots[i].x - dots[j].x;
-          dy = dots[i].y - dots[j].y;
-          if (Math.abs(dx) > LINK_DIST || Math.abs(dy) > LINK_DIST) continue;
-          dist = Math.hypot(dx, dy);
-          if (dist < LINK_DIST) {
-            var alpha = (1 - dist / LINK_DIST) * 0.18;
-            ctx.beginPath();
-            ctx.moveTo(dots[i].x, dots[i].y);
-            ctx.lineTo(dots[j].x, dots[j].y);
-            ctx.strokeStyle = rgba(COLORS[0], alpha);
-            ctx.lineWidth = 1;
-            ctx.stroke();
-          }
-        }
-      }
-      requestAnimationFrame(frame);
-    }
-
-    window.addEventListener("resize", resize);
-    window.addEventListener("mousemove", function (e) { mouse.x = e.clientX; mouse.y = e.clientY; });
-    window.addEventListener("mouseout", function () { mouse.x = -9999; mouse.y = -9999; });
-
-    window.__updateParticles = function () {
-      readColors();
-      for (var i = 0; i < dots.length; i++) dots[i].c = Math.random() < 0.65 ? COLORS[0] : COLORS[1];
-    };
-
-    readColors();
-    resize();
-    frame();
-  })();
-
-  /* ---------- Init ---------- */
-  load();
-  if (state.tasks.length === 0 && !localStorage.getItem("todo-seeded")) {
-    localStorage.setItem("todo-seeded", "1");
-    var base = Date.now();
-    state.tasks = [
-      { id: uid(), text: "欢迎使用 NEXUS TODO：点击左侧圆环可完成任务", done: false, priority: "high", createdAt: base - 3000 },
-      { id: uid(), text: "点击任务文字可直接编辑，按 Enter 保存", done: false, priority: "medium", createdAt: base - 2000 },
-      { id: uid(), text: "试试右上角按钮切换深空 / 亮色模式", done: true, priority: "low", createdAt: base - 1000 }
-    ];
-    save();
+    db.auth.onAuthStateChange(function (evt, session) {
+      if (evt === "SIGNED_IN" && session) enterApp(session.user);
+      if (evt === "SIGNED_OUT") { currentUser = null; state.tasks = []; showAuth(); }
+    });
   }
-  render();
-  inputEl.focus();
+
+  init();
 })();
 </script>
 </body>
